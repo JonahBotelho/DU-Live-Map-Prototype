@@ -4,6 +4,7 @@
 - Update `README.md` when changes affect setup, behavior, usage, or documented limitations.
 - This app is a prototype. Keep it as simple and lightweight as possible; prefer straightforward code and existing browser APIs, and avoid unnecessary dependencies, abstractions, or infrastructure.
 - Do not perform Git actions like Commit, Push, Pull etc. Assume human actions
+- Generate unit tests in `src/tests` after major feature implementations
 
 # Code style guideline
 
