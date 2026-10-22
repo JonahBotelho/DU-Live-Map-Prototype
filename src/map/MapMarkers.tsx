@@ -3,14 +3,19 @@ import {
   scale,
   type FloorMap,
   type PositionSample,
+  type DisplayMode,
 } from "../shared/recordingModel";
+import { phonePosition } from "../tracking/positionTracking";
 export function MapMarkers({
   map,
   position,
+  displayMode,
 }: {
   map: FloorMap;
   position: PositionSample | null;
+  displayMode: DisplayMode;
 }) {
+  const phone = phonePosition(position, displayMode);
   return (
     <>
       {map.checkpoints.map((checkpoint) => (
@@ -29,21 +34,23 @@ export function MapMarkers({
         </g>
       ))}
       {/* The reported radius describes the raw fix; manual anchoring adds unquantified error. */}
-      {position?.raw && (
+      {phone && position && (
         <>
+          {displayMode === "raw" && map.calibration && (
+            <circle
+              cx={phone.x}
+              cy={phone.y}
+              r={position.accuracy * scale(map.calibration!)}
+              fill="#4187e322"
+              stroke="#4187e3"
+              strokeWidth="2"
+            />
+          )}
           <circle
-            cx={position.raw.x}
-            cy={position.raw.y}
-            r={position.accuracy * scale(map.calibration!)}
-            fill="#4187e322"
-            stroke="#4187e3"
-            strokeWidth="2"
-          />
-          <circle
-            cx={position.raw.x}
-            cy={position.raw.y}
+            cx={phone.x}
+            cy={phone.y}
             r="13"
-            fill="#2674cf"
+            fill={displayMode === "raw" ? "#2674cf" : "#0f766e"}
             stroke="white"
             strokeWidth="4"
           />

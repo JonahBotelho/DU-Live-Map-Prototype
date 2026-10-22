@@ -2,12 +2,13 @@
 import { messages } from "../locales";
 import { useMapInteraction, type MapInteraction } from "./useMapInteraction";
 import { MapMarkers } from "./MapMarkers";
+import { followPosition } from "../tracking/positionTracking";
 type FloorPlanMapProps = MapInteraction & {
   onFit: () => void;
   onRecenter: () => void;
 };
 export function FloorPlanMap(props: FloorPlanMapProps) {
-  const { map, position, onFit, onRecenter, follow } = props;
+  const { map, position, displayMode, onFit, onRecenter, follow } = props;
   const {
     mapSvgRef,
     visibleViewBox,
@@ -33,12 +34,12 @@ export function FloorPlanMap(props: FloorPlanMapProps) {
         onPointerCancel={pointerCancel}
       >
         <image href={map.image} width={map.width} height={map.height} />
-        <MapMarkers map={map} position={position} />
+        <MapMarkers map={map} position={position} displayMode={displayMode} />
       </svg>
       <div className="map-actions">
         <button onClick={onFit}>{messages.map.fitFloor}</button>
         <button
-          disabled={!position?.raw}
+          disabled={!followPosition(position, displayMode)}
           onClick={onRecenter}
           aria-pressed={follow}
         >

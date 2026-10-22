@@ -1,6 +1,7 @@
 // Recording types, baseline floor metadata, and immutable sample/anchor construction.
 import { messages } from "../locales";
 import { project } from "../map/floorPlanGeometry";
+import type { SmoothingConfiguration } from "../tracking/locationSmoothing";
 export {
   local,
   project,
@@ -9,6 +10,7 @@ export {
   calibrate,
 } from "../map/floorPlanGeometry";
 export type Point = { x: number; y: number };
+export type DisplayMode = "raw" | "smoothed";
 export type Fix = {
   latitude: number;
   longitude: number;
@@ -58,6 +60,9 @@ export type PositionSample = Fix & {
   id: string;
   raw: Point | null;
   corrected: Point | null;
+  smoothed?: Point | null;
+  // Absent on older recordings; false means the callback did not replace the display.
+  displayAccepted?: boolean;
   anchorId: string | null;
 };
 export type Event = {
@@ -67,6 +72,7 @@ export type Event = {
   checkpointId?: string;
   sample?: PositionSample | null;
   anchorId?: string | null;
+  displayMode?: DisplayMode;
 };
 export type TestSession = {
   schemaVersion: 1;
@@ -80,6 +86,7 @@ export type TestSession = {
   samples: PositionSample[];
   anchors: Anchor[];
   events: Event[];
+  smoothing?: SmoothingConfiguration;
 };
 export const floor: FloorMap = {
   id: "SE12-3",

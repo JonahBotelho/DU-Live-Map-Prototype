@@ -13,6 +13,7 @@ export function App() {
     busy,
     cancelPicking,
     position,
+    displayMode,
     pick,
     follow,
     setFollow,
@@ -50,6 +51,7 @@ export function App() {
         <FloorPlanMap
           map={map}
           position={position}
+          displayMode={displayMode}
           picking={!!picking}
           onPick={pick}
           follow={follow}
@@ -64,8 +66,10 @@ export function App() {
         {position?.corrected && (
           <div className="legend">
             <span>
-              <i className="raw-dot" />
-              {messages.app.rawLegend}
+              <i
+                className={displayMode === "raw" ? "raw-dot" : "smoothed-dot"}
+              />
+              {messages.app.positionModes[displayMode]}
             </span>
             <span>
               <i className="corrected-diamond" />

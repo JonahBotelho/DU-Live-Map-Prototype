@@ -1,9 +1,16 @@
 // Owns the SVG viewBox and pointer gestures independently of floor rendering.
 import { useRef, useState, type PointerEvent } from "react";
-import type { FloorMap, Point, PositionSample } from "../shared/recordingModel";
+import type {
+  FloorMap,
+  Point,
+  PositionSample,
+  DisplayMode,
+} from "../shared/recordingModel";
+import { followPosition } from "../tracking/positionTracking";
 export function useMapInteraction({
   map,
   position,
+  displayMode,
   picking,
   onPick,
   viewKey,
@@ -27,7 +34,7 @@ export function useMapInteraction({
     visibleViewBox = { x: 0, y: 0, width: map.width, height: map.height };
     setView(visibleViewBox);
   }
-  const target = position?.corrected ?? position?.raw;
+  const target = followPosition(position, displayMode);
   if (follow && target)
     visibleViewBox = {
       ...visibleViewBox,
@@ -159,6 +166,7 @@ export function useMapInteraction({
 export type MapInteraction = {
   map: FloorMap;
   position: PositionSample | null;
+  displayMode: DisplayMode;
   picking: boolean;
   onPick: (mapPoint: Point) => void;
   viewKey: number;

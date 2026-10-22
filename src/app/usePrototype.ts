@@ -4,15 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import {
   calibrate,
   anchor,
-  sample,
   createSession,
   type FloorMap,
   type TestSession,
   type PositionSample,
   type Point,
   type Anchor,
+  type DisplayMode,
 } from "../shared/recordingModel";
 import { BrowserLocation } from "../tracking/browserLocation";
+import { PositionTracking } from "../tracking/positionTracking";
+import { smoothingConfiguration } from "../tracking/locationSmoothing";
 import * as storage from "../recordings/recordingStorage";
 import { prototypeFloor, calibrationInput } from "../map/floorPlanCalibration";
 export function usePrototype() {
@@ -20,6 +22,7 @@ export function usePrototype() {
   const [session, setSession] = useState<TestSession | null>(null),
     [history, setHistory] = useState<TestSession[]>([]),
     [position, setPosition] = useState<PositionSample | null>(null),
+    [displayMode, setDisplayMode] = useState<DisplayMode>("raw"),
     [status, setStatus] = useState(messages.app.status.ready),
     [error, setError] = useState(""),
     [storageError, setStorageError] = useState(""),
@@ -49,7 +52,7 @@ export function usePrototype() {
   // Long-lived browser callbacks read refs; React state holds snapshots for rendering.
   const locationProvider = useRef(new BrowserLocation()),
     sessionRef = useRef<TestSession | null>(null),
-    lastSample = useRef<PositionSample | null>(null),
+    positionTracking = useRef(new PositionTracking()),
     activeAnchor = useRef<Anchor | null>(null),
     // User intent survives visibility pauses, allowing tracking to resume on return.
     trackingRequested = useRef(false),
@@ -82,28 +85,21 @@ export function usePrototype() {
       activeAnchor.current.endedAt = Date.now();
       activeAnchor.current = null;
     }
-    if (lastSample.current) {
-      lastSample.current = {
-        ...lastSample.current,
-        corrected: null,
-        anchorId: null,
-      };
-      setPosition(lastSample.current);
-    }
+    positionTracking.current.clearCorrection();
+    setPosition(positionTracking.current.current);
   }
   function watch() {
     locationProvider.current.start(
       (locationFix) => {
         const activeSession = sessionRef.current;
         if (!activeSession || !trackingRequested.current) return;
-        const positionSample = sample(
+        const positionSample = positionTracking.current.record(
           locationFix,
           activeSession.floor.calibration,
           activeAnchor.current,
         );
         activeSession.samples.push(positionSample);
-        lastSample.current = positionSample;
-        setPosition(positionSample);
+        setPosition(positionTracking.current.current);
         setStatus(messages.app.status.receiving);
         setError("");
         persist();
@@ -128,6 +124,7 @@ export function usePrototype() {
       if (!trackingRequested.current) return;
       if (document.hidden) {
         locationProvider.current.stop();
+        positionTracking.current.reset();
         // A fixed offset may no longer hold after an unobserved gap; require re-anchoring.
         endAnchor();
         event("hidden");
@@ -142,6 +139,7 @@ export function usePrototype() {
       clearInterval(ageTimer);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       locationProvider.current.stop();
+      positionTracking.current.reset(true);
     };
   }, []);
   function start() {
@@ -150,12 +148,18 @@ export function usePrototype() {
       return;
     }
     const activeSession = createSession(map, notes);
+    activeSession.smoothing = { ...smoothingConfiguration };
     sessionRef.current = activeSession;
-    lastSample.current = null;
+    positionTracking.current.reset(true);
     activeAnchor.current = null;
     setPosition(null);
     trackingRequested.current = true;
     activeSession.events.push({ at: Date.now(), type: "start" });
+    activeSession.events.push({
+      at: Date.now(),
+      type: "display-mode",
+      detail: positionTracking.current.mode,
+    });
     persist();
     setStatus(messages.app.status.requesting);
     watch();
@@ -166,6 +170,7 @@ export function usePrototype() {
     setBusy(false);
     setPicking(null);
     locationProvider.current.stop();
+    positionTracking.current.reset();
     endAnchor();
     if (sessionRef.current) {
       sessionRef.current.status = "stopped";
@@ -247,7 +252,7 @@ export function usePrototype() {
       type: arrival ? "arrival" : "departure",
       checkpointId: selectedCheckpointId,
       // Score what was displayed at arrival, never a better reading received after stopping.
-      sample: arrival ? structuredClone(lastSample.current) : undefined,
+      ...(arrival ? positionTracking.current.arrivalSnapshot() : {}),
       anchorId: activeAnchor.current?.id ?? null,
       detail: observation,
     });
@@ -271,16 +276,25 @@ export function usePrototype() {
       if (!Array.isArray(input?.controls) || typeof input?.source !== "string")
         throw Error(messages.errors.calibrationInput);
       setMap({ ...map, calibration: calibrate(input.controls, input.source) });
+      positionTracking.current.reset(true);
+      setPosition(null);
       setError("");
     } catch (error) {
       setError(String(error));
     }
+  }
+  function changeDisplayMode(mode: DisplayMode) {
+    positionTracking.current.mode = mode;
+    setDisplayMode(mode);
+    if (trackingRequested.current) event("display-mode", mode);
   }
   return {
     map,
     session,
     history,
     position,
+    displayMode,
+    changeDisplayMode,
     status,
     error,
     storageError,

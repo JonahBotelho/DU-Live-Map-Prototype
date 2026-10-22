@@ -14,6 +14,8 @@ const header = [
   "correctedY",
   "anchorId",
   "detail",
+  "smoothedX",
+  "smoothedY",
 ];
 function sampleRow(sample: PositionSample) {
   return [
@@ -28,7 +30,11 @@ function sampleRow(sample: PositionSample) {
     sample.corrected?.x,
     sample.corrected?.y,
     sample.anchorId,
-    "",
+    sample.displayAccepted === undefined
+      ? ""
+      : JSON.stringify({ displayAccepted: sample.displayAccepted }),
+    sample.smoothed?.x,
+    sample.smoothed?.y,
   ];
 }
 function detailRow(
@@ -51,6 +57,8 @@ function detailRow(
     "",
     anchorId,
     JSON.stringify(detail),
+    "",
+    "",
   ];
 }
 function encodeRow(row: unknown[]) {
@@ -63,6 +71,7 @@ export function csv(session: TestSession) {
     notes: session.notes,
     userAgent: session.userAgent,
     floor: session.floor,
+    smoothing: session.smoothing,
     report: report(session),
   };
   const rows = [

@@ -9,6 +9,7 @@ import {
 import type { Prototype } from "../app/usePrototype";
 import { report } from "../recordings/recordingReport";
 import { download } from "../recordings/recordingExport";
+import { SmoothingSummary } from "./SmoothingSummary";
 export function Recordings({ model }: { model: Prototype }) {
   const { session, history, deleteRecording } = model;
   return (
@@ -47,6 +48,7 @@ export function Recordings({ model }: { model: Prototype }) {
                 })}
               </p>
               <p>{summary.outcome}</p>
+              <SmoothingSummary summary={summary} />
               <div className="record-actions">
                 <button onClick={() => download(recording, "json")}>
                   {messages.recordings.exportJson}

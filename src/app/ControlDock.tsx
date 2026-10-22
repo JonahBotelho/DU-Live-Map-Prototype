@@ -1,6 +1,8 @@
 // Displays reading freshness, actionable failures, and primary tracking controls.
 import { messages, formatMessage, formatNumber } from "../locales";
 import type { Prototype } from "./usePrototype";
+import { PositionDisplayControls } from "./PositionDisplayControls";
+import { phonePosition } from "../tracking/positionTracking";
 export function ControlDock({ model }: { model: Prototype }) {
   const {
     map,
@@ -14,20 +16,25 @@ export function ControlDock({ model }: { model: Prototype }) {
     stop,
     start,
     setPicking,
+    displayMode,
   } = model;
   const isTracking = session?.status === "active";
   const readingAgeSeconds = position ? (now - position.timestamp) / 1000 : null;
+  const phone = phonePosition(position, displayMode);
   const isOutsideFloorPlan =
-    position?.raw &&
-    (position.raw.x < 0 ||
-      position.raw.y < 0 ||
-      position.raw.x > map.width ||
-      position.raw.y > map.height);
+    phone &&
+    (phone.x < 0 || phone.y < 0 || phone.x > map.width || phone.y > map.height);
   return (
     <section className="control-dock" aria-label={messages.app.trackingLabel}>
       <div className="tracking-status" role="status">
         {busy ? messages.app.acquiringAnchor : status}
       </div>
+      <PositionDisplayControls
+        position={position}
+        now={now}
+        displayMode={displayMode}
+        onChange={model.changeDisplayMode}
+      />
       <div className="reading-stats">
         <span>
           {messages.app.reportedAccuracy}{" "}

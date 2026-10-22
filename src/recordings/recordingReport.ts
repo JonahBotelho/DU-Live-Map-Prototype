@@ -1,5 +1,6 @@
 // Summarizes arrival observations, stationary drift, and time-weighted freshness.
 import { messages } from "../locales";
+import { smoothingReport } from "./smoothingReport";
 import {
   distance,
   fresh,
@@ -44,8 +45,12 @@ function walkingCoverage(session: TestSession, end: number) {
     while (
       sampleIndex < session.samples.length &&
       session.samples[sampleIndex].receivedAt <= timestamp
-    )
-      latestSample = session.samples[sampleIndex++];
+    ) {
+      const reading = session.samples[sampleIndex++];
+      // Rejected callbacks remain recorded but never replaced the observed map position.
+      // Undefined preserves the interpretation of recordings made before this field existed.
+      if (reading.displayAccepted !== false) latestSample = reading;
+    }
     if (moving && !initializing) {
       walking++;
       if (latestSample && fresh(latestSample, timestamp)) covered++;
@@ -61,6 +66,7 @@ function checkpointResult(session: TestSession, sessionEvent: Event) {
   return {
     at: sessionEvent.at,
     checkpoint: sessionEvent.checkpointId,
+    displayMode: sessionEvent.displayMode ?? null,
     fresh: !!sessionEvent.sample && fresh(sessionEvent.sample, sessionEvent.at),
     rawApproxMetres:
       checkpoint && calibration && sessionEvent.sample?.raw
@@ -69,6 +75,11 @@ function checkpointResult(session: TestSession, sessionEvent: Event) {
     correctedApproxMetres:
       checkpoint && calibration && sessionEvent.sample?.corrected
         ? distance(checkpoint, sessionEvent.sample.corrected) /
+          scale(calibration)
+        : null,
+    smoothedApproxMetres:
+      checkpoint && calibration && sessionEvent.sample?.smoothed
+        ? distance(checkpoint, sessionEvent.sample.smoothed) /
           scale(calibration)
         : null,
     observation: sessionEvent.detail,
@@ -180,6 +191,7 @@ export function report(session: TestSession) {
     medianUpdateGapMs: percentile(gaps, 0.5),
     p90UpdateGapMs: percentile(gaps, 0.9),
     ...agreementSummary(arrivals, checkpoints),
+    ...smoothingReport(!!session.smoothing, checkpoints),
     stationary,
     wrongHallwayArrivals: arrivals.filter(
       (sessionEvent) => sessionEvent.detail === "wrong hallway",

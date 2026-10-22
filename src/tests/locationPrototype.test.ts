@@ -159,6 +159,7 @@ describe("records and analysis", () => {
     expect(report(recording).freshArrivals).toBe(1);
     const metadataRow = csv(recording).split("\r\n").at(-1)!;
     const field = metadataRow
+      .replace(/,"",""$/, "")
       .slice(metadataRow.indexOf('"{') + 1, -1)
       .replaceAll('""', '"');
     expect(JSON.parse(field).notes).toBe(recording.notes);
