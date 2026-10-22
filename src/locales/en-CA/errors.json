@@ -1,0 +1,19 @@
+{
+  "anchorCancelled": "Starting-point request cancelled.",
+  "recordingStorage": "Recording storage failed. Export this session now. {detail}",
+  "secureContext": "Open this app over HTTPS to use phone location.",
+  "calibrationInput": "Calibration needs a source and four control points.",
+  "degenerateCoordinates": "Degenerate image coordinates.",
+  "controlCount": "Supply exactly three fit points, one independent check point, and a source.",
+  "invalidCoordinates": "Invalid control coordinates.",
+  "collinearControls": "Fit points must be separated and non-collinear.",
+  "staleAnchor": "Reading is not fresh. Stand still and retry.",
+  "storageBlocked": "Storage upgrade blocked. Close other app tabs.",
+  "storageFailed": "Storage failed",
+  "geolocationUnsupported": "Geolocation is not supported.",
+  "geolocationOnceUnsupported": "Geolocation unsupported.",
+  "permissionDenied": "Location permission denied. Enable it in Chrome site settings.",
+  "locationUnavailable": "Location unavailable. Check phone location settings.",
+  "locationTimeout": "Acquisition timed out. Waiting for the next browser update.",
+  "requestCancelled": "Request cancelled."
+}

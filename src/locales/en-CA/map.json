@@ -1,0 +1,27 @@
+{
+  "accessibleDescription": "SE12 floor plan; drag to pan, pinch or use buttons to zoom",
+  "fitFloor": "Fit floor",
+  "recenter": "Recenter",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "zoomInSymbol": "＋",
+  "zoomOutSymbol": "−",
+  "checkpointOption": "{id} · {label}",
+  "checkpoints": {
+    "A": "S300 · hallway landing",
+    "B": "301 · upper hallway",
+    "C": "313C · upper junction",
+    "D": "317C · central corridor",
+    "E": "318 · lower junction",
+    "F": "325 · upper hallway",
+    "G": "S327 · hallway landing",
+    "H": "324 · lower hallway"
+  },
+  "calibrationSource": "BCIT public GIS Bsite_Building_Footprint_20241022, OBJECTID 33 (SE12), accessed 2026-10-22. https://services2.arcgis.com/IgcrRjRW95F0HKSw/arcgis/rest/services/Bsite_Building_Footprint_20241022/FeatureServer/0 . Ground footprint may differ from floor 3. Corners manually matched to supplied PDF; not surveyed indoor control.",
+  "calibrationLandmarks": {
+    "northwest": "NW main corner / image lower left (ring vertex 43)",
+    "southeast": "SE main corner / image upper right (ring vertex 17)",
+    "southwest": "SW main corner / image lower right (ring vertex 18)",
+    "northeast": "NE main corner / image upper left, held out (ring vertex 53)"
+  }
+}

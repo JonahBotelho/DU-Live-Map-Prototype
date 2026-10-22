@@ -1,0 +1,29 @@
+{
+  "documentTitle": "SE12 · Location Lab",
+  "floorTitle": "SE12 · Floor 3",
+  "approximateAlignment": "Approximate alignment",
+  "alignmentUnavailable": "Alignment unavailable",
+  "mapLabel": "Live floor map",
+  "trackingLabel": "Tracking controls",
+  "anchorInstruction": "Stand still. Acquiring starting point…",
+  "calibrationInstruction": "Tap a calibration landmark.",
+  "startingPointInstruction": "Tap your known starting point.",
+  "rawLegend": "Phone",
+  "correctedLegend": "Corrected · uncertainty unvalidated",
+  "acquiringAnchor": "Acquiring starting point…",
+  "reportedAccuracy": "Reported accuracy",
+  "updated": "Updated",
+  "readingAge": "{seconds} s ago",
+  "outsideDrawing": "Position is outside the drawing. Recenter to inspect.",
+  "stopTracking": "Stop & save",
+  "startTracking": "Start tracking",
+  "setStartingPoint": "Set starting point",
+  "status": {
+    "ready": "Ready when you are",
+    "receiving": "Receiving phone location",
+    "hidden": "Paused · page hidden",
+    "requesting": "Requesting location…",
+    "saved": "Session saved",
+    "anchored": "Starting point set"
+  }
+}

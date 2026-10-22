@@ -1,0 +1,30 @@
+{
+  "walkTest": {
+    "title": "Walk test",
+    "instructions": "Mark arrival immediately, wait 30 seconds, then depart.",
+    "checkpoint": "Checkpoint",
+    "observation": "Hallway observation",
+    "observations": {
+      "not assessed": "not assessed",
+      "correct hallway": "correct hallway",
+      "wrong hallway": "wrong hallway",
+      "no displayed position": "no displayed position"
+    },
+    "depart": "Depart · {seconds} s stopped",
+    "arrive": "Mark arrival",
+    "notes": "Device & test notes",
+    "notesPlaceholder": "Phone, OS/browser, Wi-Fi, permissions, battery saver, route"
+  },
+  "calibration": {
+    "title": "Calibration",
+    "helpTitle": "How alignment works",
+    "help": "Use three non-collinear fit landmarks and a fourth independent check. Match drawing coordinates to public-map landmarks, never to the test walk. Alignment and checkpoint positions remain approximate; the app does not detect your floor.",
+    "uncertainty": "The blue area describes the phone's reported accuracy only. Manual correction adds unvalidated uncertainty.",
+    "pickCoordinate": "Read an image coordinate",
+    "selectedCoordinate": "Image coordinate: x {x}, y {y}",
+    "jsonLabel": "Calibration JSON",
+    "apply": "Apply approximate calibration",
+    "residuals": "Fit residuals: {fit} m. Check residual: {check} m. These do not verify geographic accuracy.",
+    "sourcePlan": "Original BCIT floor plan"
+  }
+}

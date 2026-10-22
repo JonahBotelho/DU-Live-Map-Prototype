@@ -1,0 +1,19 @@
+{
+  "title": "Recordings",
+  "storageHint": "Saved in this browser. Export before clearing browser data.",
+  "empty": "No recordings yet.",
+  "summary": "{status} · {readings} · {arrivals}",
+  "readings": { "one": "{count} reading", "other": "{count} readings" },
+  "arrivals": { "one": "{count} arrival", "other": "{count} arrivals" },
+  "walkingFreshness": "Walking freshness: {value}",
+  "inconclusive": "Inconclusive: independent spatial reference unavailable",
+  "exportJson": "Export JSON",
+  "exportCsv": "Export CSV",
+  "delete": "Delete",
+  "status": {
+    "active": "active",
+    "stopped": "stopped",
+    "interrupted": "interrupted"
+  },
+  "reloadDetail": "Previous end time unknown; last recorded activity retained."
+}

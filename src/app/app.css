@@ -1,0 +1,289 @@
+/* Base controls and the mobile-first map screen, including compact landscape layout. */
+:root {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #172554;
+  background: #f3f4f6;
+  font-synthesis: none;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+select,
+textarea {
+  font: inherit;
+}
+button,
+summary,
+a {
+  touch-action: manipulation;
+}
+button {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  color: #172554;
+  cursor: pointer;
+}
+button:hover {
+  background: #eff6ff;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button[aria-pressed="true"] {
+  border-color: #1d4ed8;
+  background: #eff6ff;
+}
+.primary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: white;
+}
+.primary:hover {
+  background: #1e40af;
+}
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-bottom: 1px solid #d1d5db;
+  padding: 8px max(12px, env(safe-area-inset-right)) 8px
+    max(12px, env(safe-area-inset-left));
+  padding-top: max(8px, env(safe-area-inset-top));
+}
+h1 {
+  font-size: 17px;
+  line-height: 1.3;
+  margin: 0;
+  font-weight: 650;
+}
+.alignment {
+  font-size: 12px;
+  color: #4b5563;
+}
+.map-stage {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.map-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+.map-actions {
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  top: 12px;
+  display: flex;
+  gap: 6px;
+}
+.map-tools {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  top: 12px;
+  display: grid;
+  gap: 6px;
+}
+.map-tools button {
+  width: 44px;
+  padding: 0;
+  font-size: 22px;
+}
+.map-actions button {
+  font-size: 13px;
+}
+.pick-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.legend {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  font-size: 11px;
+  pointer-events: none;
+}
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffffed;
+  padding: 5px 7px;
+  border-radius: 4px;
+}
+.raw-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2674cf;
+}
+.corrected-diamond {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  background: #db782b;
+}
+.control-dock {
+  background: white;
+  border-top: 1px solid #d1d5db;
+  padding: 10px max(12px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  max-height: 55dvh;
+  overflow-y: auto;
+}
+.tracking-status {
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.reading-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  font-size: 12px;
+  color: #4b5563;
+  margin: 6px 0 10px;
+}
+.reading-stats strong {
+  font-weight: 600;
+  color: #172554;
+  white-space: nowrap;
+}
+.dock-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.dock-actions button {
+  font-size: 13px;
+  padding-inline: 6px;
+}
+.error,
+.warning {
+  margin: 8px 0;
+  padding: 8px;
+  border-left: 3px solid #b45309;
+  background: #fff7ed;
+  color: #7c2d12;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.error {
+  border-color: #b91c1c;
+  background: #fef2f2;
+  color: #991b1b;
+}
+@media (min-width: 700px) {
+  .app-header {
+    padding-inline: 20px;
+  }
+  .control-dock {
+    padding-inline: 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 24px;
+  }
+  .reading-stats {
+    justify-content: start;
+    gap: 24px;
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+  .dock-actions {
+    grid-column: 2;
+    grid-row: 1/3;
+    min-width: 320px;
+  }
+  .control-dock > .error,
+  .control-dock > .warning {
+    grid-column: 1/-1;
+  }
+  .map-actions {
+    left: 20px;
+  }
+  .map-tools {
+    right: 20px;
+  }
+}
+@media (max-height: 440px) and (orientation: landscape) {
+  .app-header {
+    padding-block: 4px;
+  }
+  .app-header > div {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .control-dock {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 12px;
+    padding-block: 6px;
+  }
+  .reading-stats {
+    grid-column: 1;
+    margin: 4px 0 0;
+    justify-content: start;
+  }
+  .dock-actions {
+    grid-column: 2;
+    grid-row: 1/3;
+    min-width: 270px;
+  }
+  .control-dock > .error,
+  .control-dock > .warning {
+    grid-column: 1/-1;
+  }
+}
