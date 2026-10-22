@@ -1,6 +1,9 @@
-# SE12 Location Lab
+# DU GPS Tracking Prototype
 
-Mobile web prototype for testing browser location on BCIT SE12 floor 3. Built with React, TypeScript and Vite; recordings stay in the browser. No backend or API keys required.
+Mobile web-app prototype for the GPS location tracking system system to be implemented in DirectionallyChallenged.
+Currently limited to SE12 floor 3 in the BCIT Burnaby Campus for testing purposes. 
+The app displays a map of the floor, and the users currently location as they walk around.
+Built with React, TypeScript and Vite; recordings stay in the browser. No backend or API keys required.
 
 ## Run
 
